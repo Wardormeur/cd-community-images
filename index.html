@@ -1,0 +1,43 @@
+<html>
+  <head>
+  </head>
+  <body>
+    <div class="dojos">
+      
+    </div>
+    <script>
+      const baseUrl = 'https://s3-eu-west-1.amazonaws.com/zen-dojo-images/';
+      var onLoad = function () {
+        const ids = Array.from(this.responseXML.querySelectorAll('Contents Key')).map(row => row.innerHTML)
+        const dojos = document.querySelector('.dojos');
+        const size = 50;
+        const minHeightWidth = Math.min(window.innerHeight,window.innerWidth);
+        // TODO : handle spacing /positioning depending on the number of ids
+        // TODO : fix center of spirale being cramped 
+        const start = (minHeightWidth + size)/2; //ids.length * size / 2;
+        console.log(start);
+        ids.forEach((id, i) => {
+          angle = 0.1 * i;
+          x = (1 + angle) * Math.cos(angle);
+          y = (1 + angle) * Math.sin(angle);
+          const img = document.createElement('img');
+          img.setAttribute('src', `${baseUrl}${id}`);
+          img.setAttribute('width', size);
+          img.setAttribute('height', size);
+          img.style.top = (x * size) + start;
+          img.style.right = (y * size) + start;
+          dojos.appendChild(img);
+        });
+      }
+      var oReq = new XMLHttpRequest();
+      oReq.addEventListener('load', onLoad);
+      oReq.open('GET', baseUrl);
+      oReq.send();
+    </script>
+  <style>
+    .dojos img {
+      position: absolute;
+    }
+  </style>
+  </body>
+</html>
